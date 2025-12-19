@@ -184,9 +184,7 @@ python rag.py
 
 Hybrid retrieval (BM25 + Dense)
 
-Metadata schema та SQLite
-
-Metadata filtering logic
+Citations & source formatting
 
 Integration Groq LLM
 
@@ -198,7 +196,9 @@ Semantic embeddings
 
 Reranker integration
 
-Citations & source formatting
+Metadata schema та SQLite
+
+Metadata filtering logic
 
 Gradio UI та debug-вивід
 
