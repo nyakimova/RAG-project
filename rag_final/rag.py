@@ -528,11 +528,15 @@ def answer_with_sources(query, api_key, use_bm25, use_dense, use_reranker, use_m
         rag_system.client = Groq(api_key=api_key)
 
         if not metadata_exists():
-            print(" Generate metadata...")
+            print("Generating metadata...")
             save_metadata_to_db(chunks, rag_system.client)
-        else:
-            print(" Metadata exists, skipped.")
-
+    else:
+        return (
+            " Please enter your Groq API key",
+            "",
+            "No API key provided",
+            get_available_metadata_filters()
+        )
     answer, contexts, debug = rag_system.answer_question(
         query, use_bm25, use_dense, use_reranker, use_metadata, int(top_k)
     )
@@ -546,7 +550,8 @@ def answer_with_sources(query, api_key, use_bm25, use_dense, use_reranker, use_m
             f"URL: {c['url']}\n\n"
         )
 
-    return answer, sources, debug
+    return answer, sources, debug, get_available_metadata_filters()
+
 
 def get_available_metadata_filters() -> str:
     with get_db() as conn:
@@ -571,7 +576,9 @@ def get_available_metadata_filters() -> str:
 
 with gr.Blocks(title=" RAG QA System + Metadata", theme=gr.themes.Soft()) as demo:
     gr.Markdown("# RAG Question Answering System + Metadata Filtering")
-
+    metadata_md = gr.Markdown(
+        "### Metadata Filtering\n\n_Generate metadata by asking a question_"
+    )
     query_input = gr.Textbox(
         label=" Your question",
         placeholder="Find beginner tutorials about machine learning",
@@ -606,9 +613,11 @@ with gr.Blocks(title=" RAG QA System + Metadata", theme=gr.themes.Soft()) as dem
     submit_btn.click(
         answer_with_sources,
         [query_input, api_key_input, use_bm25, use_dense, use_reranker, use_metadata, top_k],
-        [answer_out, sources_out, debug_out]
+        [answer_out, sources_out, debug_out, metadata_md]
     )
-    gr.Markdown(get_available_metadata_filters())
+
+
+    # gr.Markdown(get_available_metadata_filters())
 
 
 demo.launch()
