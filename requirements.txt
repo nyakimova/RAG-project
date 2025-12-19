@@ -1,0 +1,7 @@
+gradio>=4.0
+numpy
+wikipedia
+groq
+sentence-transformers
+rank-bm25
+langchain-text-splitters
