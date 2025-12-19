@@ -611,4 +611,4 @@ with gr.Blocks(title=" RAG QA System + Metadata", theme=gr.themes.Soft()) as dem
     gr.Markdown(get_available_metadata_filters())
 
 
-demo.launch(share=True)
+demo.launch()
